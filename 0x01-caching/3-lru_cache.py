@@ -1,46 +1,43 @@
 #!/usr/bin/env python3
-"""class to add elements to the cache"""
-BaseCaching = __import__('base_caching').BaseCaching
+""" BaseCaching module
+"""
+from base_caching import BaseCaching
 
 
 class LRUCache(BaseCaching):
-    """_summary_
-
-    Args:
-        BaseCaching (_type_): _description_
+    """
+    FIFOCache defines FIFO caching system
     """
     def __init__(self):
-        """_summary_
+        """
+        Initialize the class with parent's init method
         """
         super().__init__()
+        self.usage = []
 
     def put(self, key, item):
-        """_summary_
-
-        Args:
-            key (_type_): _description_
-            item (_type_): _description_
         """
-        if key and item:
-            if len(self.cache_data) == BaseCaching.MAX_ITEMS and\
-                    self.cache_data.get(key) is None:
-
-                key_to_remove = list(self.cache_data.keys())[0]
-                self.cache_data.pop(key_to_remove)
-                print("DISCARD {}".format(key_to_remove))
+        Cache a key-value pair
+        """
+        if key is None or item is None:
+            pass
+        else:
+            length = len(self.cache_data)
+            if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
+                print("DISCARD: {}".format(self.usage[0]))
+                del self.cache_data[self.usage[0]]
+                del self.usage[0]
+            if key in self.usage:
+                del self.usage[self.usage.index(key)]
+            self.usage.append(key)
             self.cache_data[key] = item
 
     def get(self, key):
-        """_summary_
-
-        Args:
-            key (_type_): _description_
-
-        Returns:
-            _type_: _description_
         """
-        value = self.cache_data.get(key)
-        if value:
-            self.cache_data.pop(key)
-            self.cache_data[key] = value
-        return value
+        Return the value linked to a given key, or None
+        """
+        if key is not None and key in self.cache_data.keys():
+            del self.usage[self.usage.index(key)]
+            self.usage.append(key)
+            return self.cache_data[key]
+        return None
