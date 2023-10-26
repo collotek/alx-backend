@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""class to add elements to cache"""
+"""class to add elements to the cache"""
 from typing import Any, Optional
 
 BaseCaching = __import__('base_caching').BaseCaching
