@@ -1,37 +1,42 @@
 #!/usr/bin/env python3
-"""class to add elements to the cache"""
-BaseCaching = __import__('base_caching').BaseCaching
+""" BaseCaching module
+"""
+from base_caching import BaseCaching
 
 
 class LIFOCache(BaseCaching):
-    """_summary_
-
-    Args:
-        BaseCaching (_type_): _description_
+    """
+    FIFOCache defines a FIFO caching system
     """
 
-    def put(self, key, item):
-        """_summary_
-
-        Args:
-            key (_type_): _description_
-            item (_type_): _description_
+    def __init__(self):
         """
-        if key and item:
-            if len(self.cache_data) == BaseCaching.MAX_ITEMS and\
-                    self.cache_data.get(key) is None:
+        Initialize the class with the parent's init method
+        """
+        super().__init__()
+        self.order = []
 
-                k, v = self.cache_data.popitem()
-                print("DISCARD {}".format(k))
+    def put(self, key, item):
+        """
+        Cache a key-value pair
+        """
+        if key is None or item is None:
+            pass
+        else:
+            length = len(self.cache_data)
+            if length >= BaseCaching.MAX_ITEMS and key not in self.cache_data:
+                print("DISCARD: {}".format(self.order[-1]))
+                del self.cache_data[self.order[-1]]
+                del self.order[-1]
+            if key in self.order:
+                del self.order[self.order.index(key)]
+            self.order.append(key)
             self.cache_data[key] = item
 
     def get(self, key):
-        """_summary_
-
-        Args:
-            key (_type_): _description_
-
-        Returns:
-            _type_: _description_
         """
-        return self.cache_data.get(key)
+        Return the value linked to a given key, or None
+        """
+        if key is not None and key in self.cache_data.keys():
+            return self.cache_data[key]
+        return None
